@@ -15,9 +15,10 @@ type Message struct {
 
 type Author struct {
 	Badges      []Badge `json:"badges"`
+	Emotes      []Emote `json:"emotes"`
 	Color       string  `json:"colour"`
 	DisplayName string  `json:"display_name"`
-	ID          uint    `json:"id"`
+	ID          string  `json:"id"`
 	Name        string  `json:"name"`
 }
 
@@ -26,32 +27,36 @@ type Badge struct {
 	ClickURL    string `json:"clickURL"`
 	Name        string `json:"name"`
 	Title       string `json:"title"`
-	Version     uint8  `json:"version"`
 }
 type Emote struct {
-	// Images []Image `json:"images"`
-	ID        string `json:"id"`
-	Locations string `json:"locations"`
-	Name      string `json:"name"`
+	ID        string  `json:"id"`
+	Images    []Image `json:"images"`
+	Locations string  `json:"locations"`
+	Name      string  `json:"name"`
+}
+type Image struct {
+	Height int    `json:"height"`
+	URL    string `json:"url"`
 }
 
 func CreateTwitchFeed() (x *TwitchFeed) {
 	return &TwitchFeed{}
 }
 
-/*
-//example url
-// https://static-cdn.jtvnw.net/badges/v1/ceb9f2bb-70ff-4e3a-80b4-51da68f5f4a2/2
-type Icon struct {
-	Height int `json:"height"`
-	Dems   int `json:"id"`
-	URL string `json:"url"`
+// Get All Emotes returns all Emotes in a Message
+// If no emotes s will have length of zero obviously
+func (m Message) GetAllEmotes() (s []string) {
+	for _, x := range m.Author.Emotes {
+		s = append(s, x.Name)
+	}
+	return s
 }
-//example url
-//https://static-cdn.jtvnw.net/emoticons/v2/emotesv2_5801163bd6c240e8a3fd30cc86387acb/default/light/3.0
-type Image struct{
-	Height uint8 `json:"height"`
-	URL string `json:"url"`
-
+func (m Message) GetAllEmoteLinks() (s []string) {
+	for _, x := range m.Author.Emotes {
+		s = append(s, x.Images[len(x.Images)-1].URL)
+	}
+	return s
 }
-*/
+func (m Message) GetChatUserName() (s string) {
+	return m.Author.Name
+}
