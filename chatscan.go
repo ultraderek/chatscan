@@ -8,8 +8,9 @@ import (
 	"os"
 )
 
-const jsonlocation = "/home/derek/Desktop/edits/edits todo/LucyPyre/baochat.json"
-const newfilelocation = "/home/derek/Desktop/edits/edits todo/LucyPyre/baodata"
+const basedirectory = "/home/derek/Desktop/edits/edits todo"
+const jsonlocation = basedirectory + "/henya/Henya20240428DarkSouls/chat.json"
+const newfilelocation = basedirectory + "henya/Henya20240428DarkSouls/chatdata"
 
 //const jsonlocation = "/home/derek/Desktop/edits/edits todo/LucyPyre/lucychat.json"
 
