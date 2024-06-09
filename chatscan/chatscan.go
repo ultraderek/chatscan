@@ -1,17 +1,22 @@
 package chatscan
 
 import (
-	"chatscan/chatjson"
-	"encoding/json"
+	"chatscan/chatjson/twchat"
 	"fmt"
-	"io"
 	"os"
 )
 
+const newfilelocation = "sampleout"
+const jsonlocation = "twitch.json"
+
+/*
+const basedirectory = "/home/derek/Desktop/edits/edits todo"
+const jsonlocation = basedirectory + "/Pippa/Pippa20240528HerLastStream/chat.json"
+const newfilelocation = basedirectory + "/Pippa/Pippa20240528HerLastStream/chatdata"
 const basedirectory = "/home/derek/Desktop/edits/edits todo"
 const jsonlocation = basedirectory + "/henya/Henya20240428DarkSouls/chat.json"
 const newfilelocation = basedirectory + "/henya/Henya20240428DarkSouls/chatdata"
-
+*/
 //const jsonlocation = "/home/derek/Desktop/edits/edits todo/LucyPyre/lucychat.json"
 
 type overlapingseconds struct {
@@ -27,32 +32,27 @@ func ProgramMain() {
 
 // ProgramMain2 is a test program
 func ProgramMain2() {
-	steps := 15
+	steps := 60
 	size := steps * 2
-	file, err := os.Open(jsonlocation)
-	if err != nil {
-		panic(err)
-	}
-	defer file.Close()
+
 	writefile, err := os.Create(fmt.Sprintf("%v%v", newfilelocation, steps))
 	if err != nil {
 		panic(err)
 	}
 	defer writefile.Close()
-	//bufreader := bufio.NewReader(file)
-	data, err := io.ReadAll(file)
-	if err != nil {
-		panic(err)
-	}
-	twfeed := make([]chatjson.Message, 0)
-	err = json.Unmarshal(data, &twfeed)
+
+	feed, err := twchat.CreateFeed(jsonlocation)
 	if err != nil {
 		panic(err)
 	}
 
-	cntr := make([]int, twfeed[len(twfeed)-1].TimeSeconds+1)
-	for _, x := range twfeed {
-		cntr[x.TimeSeconds]++
+	cntr := make([]messagecounter, int(feed[len(feed)-1].TimeInSeconds)+1)
+	for _, x := range feed {
+		if x.TimeInSeconds >= 0 {
+			cntr[int(x.TimeInSeconds)].loadenames(x)
+			cntr[int(x.TimeInSeconds)].timetext = x.TimeText
+		}
+
 	}
 
 	sumedsecsarray := make([]overlapingseconds, 0)
@@ -96,4 +96,5 @@ func ProgramMain2() {
 
 		}
 	}
+
 }
