@@ -10,11 +10,31 @@ type messagecounter struct {
 	emotes    []emotecounter
 	nmessages int
 	timetext  string
+	time      int
 }
 type EmoteNamer interface {
 	EmoteNames() (s []string)
 }
 
+func (m *messagecounter) append(c *messagecounter) {
+	m.nmessages += c.nmessages
+	if c.emotes == nil {
+		return
+	}
+	for i, emote := range c.emotes {
+		hasemote := false
+		for j, x := range m.emotes {
+			if strings.Contains(x.emote, emote.emote) {
+				m.emotes[j].n += emote.n
+				hasemote = true
+				break
+			}
+		}
+		if !hasemote {
+			m.emotes = append(m.emotes, c.emotes[i])
+		}
+	}
+}
 func (m *messagecounter) loadenames(x EmoteNamer) {
 	m.nmessages++
 	emotearray := x.EmoteNames()

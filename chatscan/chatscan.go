@@ -7,7 +7,7 @@ import (
 )
 
 const newfilelocation = "sampleout"
-const jsonlocation = "twitch.json"
+const jsonlocation = "mariefilianchat.json"
 
 /*
 const basedirectory = "/home/derek/Desktop/edits/edits todo"
@@ -32,10 +32,11 @@ func ProgramMain() {
 
 // ProgramMain2 is a test program
 func ProgramMain2() {
-	steps := 60
+	excludepadding := 300
+	steps := 30
 	size := steps * 2
 
-	writefile, err := os.Create(fmt.Sprintf("%v%v", newfilelocation, steps))
+	writefile, err := os.Create(fmt.Sprintf("%v%v.csv", newfilelocation, steps))
 	if err != nil {
 		panic(err)
 	}
@@ -65,16 +66,20 @@ func ProgramMain2() {
 		section := overlapingseconds{startval: uint(i), starttime: fmt.Sprintf("%v:%v:%v", hours, minutes, seconds)}
 		for j := i; j < i+size; j++ {
 			if j < len(cntr) {
-				section.sumedvals += cntr[j]
+
+				section.sumedvals += cntr[j].nmessages
 			}
 		}
 		sumedsecsarray = append(sumedsecsarray, section)
 	}
 	var sumation int
 	for x := range sumedsecsarray {
-		sumation += sumedsecsarray[x].sumedvals
+		if x >= (excludepadding/steps) && x <= len(sumedsecsarray)-(excludepadding/steps) {
+			sumation += sumedsecsarray[x].sumedvals
+		}
+
 	}
-	sumation /= (len(sumedsecsarray))
+	sumation /= (len(sumedsecsarray)) - (2 * (excludepadding / steps))
 
 	for x := range sumedsecsarray {
 		if sumedsecsarray[x].sumedvals-sumation > 0 {
