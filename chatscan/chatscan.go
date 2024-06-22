@@ -7,7 +7,7 @@ import (
 )
 
 const newfilelocation = "sampleout"
-const jsonlocation = "mariefilianchat.json"
+const jsonlocation = "chat.json"
 
 /*
 const basedirectory = "/home/derek/Desktop/edits/edits todo"
@@ -32,7 +32,11 @@ func ProgramMain() {
 
 // ProgramMain2 is a test program
 func ProgramMain2() {
-	excludepadding := 300
+
+	excludebeginning := 56 * 60
+	//5:38:52-3:45:12 =1:53:40
+	excludeend := 6820
+
 	steps := 30
 	size := steps * 2
 
@@ -74,12 +78,12 @@ func ProgramMain2() {
 	}
 	var sumation int
 	for x := range sumedsecsarray {
-		if x >= (excludepadding/steps) && x <= len(sumedsecsarray)-(excludepadding/steps) {
+		if x >= (excludebeginning/steps) && x <= len(sumedsecsarray)-(excludeend/steps) {
 			sumation += sumedsecsarray[x].sumedvals
 		}
 
 	}
-	sumation /= (len(sumedsecsarray)) - (2 * (excludepadding / steps))
+	sumation /= (len(sumedsecsarray) - ((excludeend + excludebeginning) / steps))
 
 	for x := range sumedsecsarray {
 		if sumedsecsarray[x].sumedvals-sumation > 0 {
