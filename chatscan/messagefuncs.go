@@ -1,6 +1,8 @@
 package chatscan
 
-import "strings"
+import (
+	"strings"
+)
 
 type emotecounter struct {
 	emote string
@@ -10,7 +12,7 @@ type messagecounter struct {
 	emotes    []emotecounter
 	nmessages int
 	timetext  string
-	time      int
+	//time      int
 }
 type EmoteNamer interface {
 	EmoteNames() (s []string)
@@ -38,6 +40,7 @@ func (m *messagecounter) append(c *messagecounter) {
 func (m *messagecounter) loadenames(x EmoteNamer) {
 	m.nmessages++
 	emotearray := x.EmoteNames()
+
 	if emotearray == nil {
 		return
 	}
@@ -46,6 +49,7 @@ func (m *messagecounter) loadenames(x EmoteNamer) {
 		hasemote := false
 		for i, x := range m.emotes {
 			if strings.Contains(x.emote, emote) {
+
 				m.emotes[i].n++
 				hasemote = true
 				break
@@ -56,4 +60,9 @@ func (m *messagecounter) loadenames(x EmoteNamer) {
 		}
 	}
 
+}
+
+// totalmessages returns the number of messages that were counted in sloted time
+func (m *messagecounter) totalmessages() int {
+	return m.nmessages
 }
